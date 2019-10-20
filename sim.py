@@ -1,25 +1,9 @@
 from copy import copy
 from collections import defaultdict
-from dataclasses import dataclass, asdict
+from dataclasses import asdict
 from random import randint
 
-
-@dataclass
-class Defenses:
-    slash: int = 0
-    stab: int = 0
-    crush: int = 0
-    mage: int = 0
-    range: int = 0
-
-
-@dataclass
-class Npc:
-    name: str = ""
-    hp: int = 0
-    defense: int = 0
-    defenses: Defenses = Defenses()
-
+from npcs import Npc, Tekton5
 
 def defense_roll(npc: Npc, style: str):
     defense_bonus = asdict(npc.defenses)[style]
@@ -62,29 +46,33 @@ def hit(npc: Npc, style: str, attack_roll: int, max_hit: int):
 
 
 def scythe(npc: Npc):
-    hit(npc, "slash", 31439, 48 + 24 + 12)
+    if roll(npc, "slash", 31439):
+        first_roll = randint(0, 48)
+        second_roll = randint(0, 24)
+        third_roll = randint(0, 12)
+        npc.hp -= first_roll + second_roll + third_roll
+
     return 5
 
 
 def hammer(npc: Npc):
-    damage = hit(npc, "crush", 100, 100)
+    damage = hit(npc, "crush", 34736, 73)
     if damage != 0:
         npc.defense = int(npc.defense * 0.7)
     return 6
 
 
 def bgs(npc: Npc):
-    damage = hit(npc, "slash", 100, 100)
+    damage = hit(npc, "slash", 69434, 74)
     if damage != 0:
         npc.defense = max(0, int(npc.defense - damage))
     return 7
 
-def roll(npc, style, atkroll):
-    defense_roll = npc.defense
-    if randint(0, attack_roll) > randint(0, defense_roll):
+def roll(npc, style, attack_roll):
+    return randint(0, attack_roll) > randint(0, defense_roll(npc, style))
 
 def clawhit(min_hit, max_hit):
-    rolled_hit = random.randint(0, 48)
+    rolled_hit = randint(0, 48)
     return rolled_hit * 1.75
 
 def claws(npc: Npc):
@@ -92,13 +80,13 @@ def claws(npc: Npc):
 
     if roll(npc, "slash", clawatkroll):
         damage = clawhit(44)
-    else if roll(npc, "slash", clawatkroll):
+    elif roll(npc, "slash", clawatkroll):
         pass
-    else if roll(npc, "slash", clawatkroll):
+    elif roll(npc, "slash", clawatkroll):
         pass
-    else if roll(npc, "slash", clawatkroll):
+    elif roll(npc, "slash", clawatkroll):
         pass
-    else
+    else:
         damage = 0
 
     npc.hp -= damage
@@ -123,11 +111,10 @@ def hammerbgs(npc: Npc):
 
 
 def main():
-    for tick, npc in enumerate(
-            run(Npc("Tekton", 10000, 100), [hammerbgs, hammerbgs])):
-        print("Tick {tick} npc={npc}")
+    for tick, npc in enumerate(run(Tekton5, [hammerbgs, hammerbgs])):
+        print(f"Tick {tick} npc={npc}")
 
-    print("Took {tick-1} ticks")
+    print(f"Took {tick-1} ticks")
 
 
 if __name__ == "__main__":
