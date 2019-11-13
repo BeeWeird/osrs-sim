@@ -5,6 +5,7 @@ from random import randint
 
 from npcs import Npc, Tekton5
 
+
 def defense_roll(npc: Npc, style: str):
     defense_bonus = asdict(npc.defenses)[style]
     return (npc.defense + 9) * (defense_bonus + 64)
@@ -59,6 +60,8 @@ def hammer(npc: Npc):
     damage = hit(npc, "crush", 34736, 73)
     if damage != 0:
         npc.defense = int(npc.defense * 0.7)
+    else:
+        npc.defense = int(npc.defense * 0.95)
     return 6
 
 
@@ -66,7 +69,9 @@ def bgs(npc: Npc):
     damage = hit(npc, "slash", 69434, 74)
     if damage != 0:
         npc.defense = max(0, int(npc.defense - damage))
-    return 7
+    else:
+        npc.defense = max(0, int(npc.defense - 5))
+    return 6
 
 def roll(npc, style, attack_roll):
     return randint(0, attack_roll) > randint(0, defense_roll(npc, style))
