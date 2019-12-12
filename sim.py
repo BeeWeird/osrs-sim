@@ -46,6 +46,16 @@ def hit(npc: Npc, style: str, attack_roll: int, max_hit: int):
     return 0
 
 
+def rapier(npc: Npc):
+    hit(npc, "stab", 33525, 53)
+    return 4
+
+
+def dsword(npc: Npc):
+    hit(npc, "stab", 29204, 47)
+    return 4
+
+
 def scythe(npc: Npc):
     if roll(npc, "slash", 31439):
         first_roll = randint(0, 48)

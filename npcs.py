@@ -35,3 +35,16 @@ Tekton3 = Npc(
     defense = 209,
     defenses = tekdef
 )
+
+crystaldef = Defenses(
+    stab=-5,
+    slash=180,
+    crush=180
+)
+
+VasaCrystal3 = Npc(
+    name = "Vasa Crystal (3 man)",
+    hp = 232,
+    defense = 102,
+    defenses = crystaldef
+)
