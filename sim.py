@@ -38,6 +38,13 @@ def run(npc: Npc, players):
     yield npc
 
 
+def ticks_to_kill(npc, players):
+    i = -2
+    for x in run(copy(npc), players):
+        i += 1
+    return i
+
+
 def hit(npc: Npc, style: str, attack_roll: int, max_hit: int):
     if roll(npc, style, attack_roll):
         damage = randint(0, max_hit)
